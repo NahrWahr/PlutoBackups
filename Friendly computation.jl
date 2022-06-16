@@ -4,25 +4,6 @@
 using Markdown
 using InteractiveUtils
 
-# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
-macro bind(def, element)
-    quote
-        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
-        local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
-        el
-    end
-end
-
-# ╔═╡ 7da76f25-a5dd-470c-ab28-ce3611f8443b
-begin
-	using Primes
-
-	raw = read("/home/rnarwar/Desktop/RawData/imageid_746/bsq.raw");
-	println(factor(Dict, size(raw,1)))
-	img = reshape(reinterpret(UInt16, raw), (2048, 2048, 53))/512;
-end
-
 # ╔═╡ d0cf6447-2471-48ec-90b2-c4a110224330
 begin
 	using ArchGDAL
@@ -48,17 +29,10 @@ begin
 	SelectedBands = (hyperion_bands[setdiff(1:end, (88:108),(131:158))])
 end
 
-# ╔═╡ b423a114-352f-4747-83bc-da794f2b5dd1
-@bind b Slider(1:52)
-
-# ╔═╡ 1f5df2a6-3d5f-479f-ad26-49ed11a5932a
-RGB.(img[:,:,b])#[begin+10b:end-200,begin+10b:end-200,b])
-
-# ╔═╡ eeb22543-4006-4b54-9c26-3fd4f996b9f3
-b
-
 # ╔═╡ ebbe49aa-3bed-4457-bff8-5e1599cddde6
 #Index, Data = Discard0(IndexFlat(LoadData()))
+#Index, Data = Discard0(IndexFlat(LoadTIF()[:,100:end-100,:]))
+
 #npzwrite("/home/rnarwar/Pixxel/project/testdata/FlatARD.npz", X)
 #@save "/home/rnarwar/Pixxel/project/testdata/raw.jld2" X
 #@save "/home/rnarwar/Pixxel/project/testdata/IndARD.jld2" Index Data
@@ -102,7 +76,7 @@ function IndexFlat(Data::Array{UInt8, 3})::Matrix{IPixel}
 end
 
 # ╔═╡ 17c8dea7-7c82-409d-a5f6-90a7b56ea6d8
-function LoadData()
+function LoadData()::Tuple{Matrix{UInt8}, Vector{CartesianIndex}}
 	X, Index = load("/home/rnarwar/Pixxel/project/testdata/IndARD.jld2", "Data", "Index")
 	return X, Index
 end
@@ -145,7 +119,6 @@ JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
 NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-Primes = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [compat]
@@ -157,7 +130,6 @@ JLD2 = "~0.4.22"
 NPZ = "~0.4.2"
 Plots = "~1.29.0"
 PlutoUI = "~0.7.39"
-Primes = "~0.5.2"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -707,11 +679,6 @@ git-tree-sha1 = "f550e6e32074c939295eb5ea6de31849ac2c9625"
 uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
 version = "0.5.1"
 
-[[deps.IntegerMathUtils]]
-git-tree-sha1 = "f366daebdfb079fd1fe4e3d560f99a0c892e15bc"
-uuid = "18e54dd8-cb9d-406c-a71d-865a43cbb235"
-version = "0.1.0"
-
 [[deps.IntegralArrays]]
 deps = ["ColorTypes", "FixedPointNumbers", "IntervalSets"]
 git-tree-sha1 = "be8e690c3973443bec584db3346ddc904d4884eb"
@@ -1143,12 +1110,6 @@ deps = ["TOML"]
 git-tree-sha1 = "47e5f437cc0e7ef2ce8406ce1e7e24d44915f88d"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
 version = "1.3.0"
-
-[[deps.Primes]]
-deps = ["IntegerMathUtils"]
-git-tree-sha1 = "747f4261ebe38a2bc6abf0850ea8c6d9027ccd07"
-uuid = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
-version = "0.5.2"
 
 [[deps.Printf]]
 deps = ["Unicode"]
@@ -1658,10 +1619,6 @@ version = "0.9.1+5"
 
 # ╔═╡ Cell order:
 # ╟─7a54656e-2926-46e6-8f29-c73015b3a78b
-# ╠═7da76f25-a5dd-470c-ab28-ce3611f8443b
-# ╠═1f5df2a6-3d5f-479f-ad26-49ed11a5932a
-# ╠═eeb22543-4006-4b54-9c26-3fd4f996b9f3
-# ╠═b423a114-352f-4747-83bc-da794f2b5dd1
 # ╠═ebbe49aa-3bed-4457-bff8-5e1599cddde6
 # ╟─2496b8d7-6c2e-4dec-8665-136c08c67a4b
 # ╟─4c03fb3f-b145-4957-8b9e-481a7b4fcf2d
