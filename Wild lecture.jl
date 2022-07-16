@@ -39,6 +39,9 @@ end
 # ╔═╡ ed0f5dd7-c9b6-461f-8e54-874599f7538d
 @enum Action UP DOWN LEFT RIGHT; Action
 
+# ╔═╡ 897facc2-2063-4b52-8989-6692fede4b2e
+A = [UP, DOWN, LEFT, RIGHT]
+
 # ╔═╡ 1fa60d67-a446-4b3f-9bc1-8a9c6b5184c7
 begin
 	null = State(-1, -1)
@@ -48,8 +51,8 @@ end
 # ╔═╡ 15a32f35-e1d4-4017-832f-e0e9291a8199
 S = [[State(x, y) for x = 1:4, y = 1:3]..., null]
 
-# ╔═╡ 897facc2-2063-4b52-8989-6692fede4b2e
-A = [UP, DOWN, LEFT, RIGHT]
+# ╔═╡ fad4881c-8041-46a9-a47d-6a6e54bae102
+map(termination, S)
 
 # ╔═╡ c1a5f8e1-1c6b-4d33-8e3e-ede62672c11a
 const MOVEMENTS = Dict(
@@ -67,9 +70,9 @@ Base.:+(s1::State, s2::State) = State(
 # ╔═╡ 2005bdd2-0238-4164-a45a-a477686571ac
 function R(s, a = missing)
     if s == State(4, 2)
-        return -100
-    elseif s == State(4, 3)
         return 10
+    elseif s == State(4, 3)
+        return 100
     end
     return 0
 end
@@ -88,7 +91,7 @@ function T(s::State, a::Action)
 
     # enumerate() from Julia Base.Iterators
     for (index, a_prime) in enumerate(A)
-        prob = (a_prime == a) ? 0.7 : 0.1
+        prob = (a_prime == a) ? 0.3 : 0.5
         dest = s + MOVEMENTS[a_prime]
         next_states[index + 1] = dest
 
@@ -1620,9 +1623,10 @@ version = "0.9.1+5"
 # ╠═801b9e0b-92d1-41a5-8463-e10c5aeb7949
 # ╠═f23e3350-fb59-4337-86b5-6dc6cfed27d4
 # ╠═ed0f5dd7-c9b6-461f-8e54-874599f7538d
-# ╠═1fa60d67-a446-4b3f-9bc1-8a9c6b5184c7
-# ╠═15a32f35-e1d4-4017-832f-e0e9291a8199
 # ╠═897facc2-2063-4b52-8989-6692fede4b2e
+# ╠═15a32f35-e1d4-4017-832f-e0e9291a8199
+# ╠═1fa60d67-a446-4b3f-9bc1-8a9c6b5184c7
+# ╠═fad4881c-8041-46a9-a47d-6a6e54bae102
 # ╠═c1a5f8e1-1c6b-4d33-8e3e-ede62672c11a
 # ╠═7a9a3e6f-3881-4057-aed0-5300f3c59124
 # ╠═128f504c-4881-473b-935b-f18acd0bb1d9
