@@ -173,7 +173,7 @@ begin
 		end
 		return cost
 	end
-	cewlbld([1 10 11 1 10 11 10 1])
+	cewlbld([1 10 11 1 10 11 10 1 7])
 end
 
 # ╔═╡ 65cf904a-5f81-42b2-b9fd-769a92bf350e
@@ -194,7 +194,8 @@ begin
 	end
 	ssptest = [0 2
 			  -3 0
-			   0 -1]
+			   0 10
+			  -2 0]
 	shortestsalepath(ssptest)
 end
 
@@ -207,15 +208,17 @@ md"""
 # ╔═╡ d9833230-4d7f-483a-9693-e13d0bc372de
 begin
 	function optred(v::Vector)
-		for i in 2:length(v) #range(1, len(v))
-			if v[i-1] > v[i]
+
+		diff = v[2:end] - v[1:end-1]
+		for i in 2:length(diff)
+			if (diff[i]*diff[i-1]) < 0
 				return false
 			end
 		end
+		
 		return true
 	end
-	v = [collect(1:10000); 1]#; 100]
-	optred(v)
+	optred([collect(10:-2:2); 1; collect(2:2:10)])
 end
 
 # ╔═╡ 9076d9bd-b5a2-4ef4-8a72-4ee914a46bf9
@@ -224,66 +227,63 @@ md"""
 ---
 """
 
-# ╔═╡ aaad674f-233a-4802-b57a-da6132b9fb44
-md"""
-A 0-indexed array a of size n is called good if for all valid indices i (0≤i≤n−1), ai+i is a perfect square†
-
-.
-
-Given an integer n
-. Find a permutation‡ p of [0,1,2,…,n−1]
-
-that is good or determine that no such permutation exists.
-
-†
-An integer x is said to be a perfect square if there exists an integer y such that x=y2
-
-.
-
-‡
-An array b is a permutation of an array a if b consists of the elements of a in arbitrary order. For example, [4,2,3,4] is a permutation of [3,2,4,4] while [1,2,2] is not a permutation of [1,2,3]
-
-.
-Input
-
-The first line contains a single integer t
-(1≤t≤104
-
-) — the number of test cases.
-
-The only line of each test case contains a single integer n
-(1≤n≤105) — the length of the permutation p
-
-.
-
-It is guaranteed that the sum of n
-over all test cases does not exceed 105
-
-.
-Output
-
-For each test case, output n
-distinct integers p0,p1,…,pn−1 (0≤pi≤n−1) — the permutation p — if the answer exists, and −1 otherwise.
-"""
-
 # ╔═╡ 441a45bf-b2ab-421f-9e40-ff6aeac75c99
-function goodarray(n)
-	for i = 0:n-1
-		p = floor(Int, √(i))
-		qpossible = Vector{Int}(undef,0)
-		
-		for q = 0:n-1
-			r² = (p + q)^2
-			if (r² - i >= 0 && r² - i < n-1)
-				push!(qpossible, r² - i)
+begin
+	function goodarray(n)
+		for i = 0:n-1
+			p = floor(Int, √(i))
+			qpossible = Vector{Int}(undef,0)
+			
+			for q = 0:floor(Int, √n)
+				r² = (p + q)^2
+				if (r² - i >= 0 && r² - i < n-1)
+					push!(qpossible, r² - i)
+				end
 			end
+			println("$i $qpossible")
 		end
-		println("$i $qpossible")
 	end
+	goodarray(17)
 end
 
-# ╔═╡ 2adeb08d-0a36-4af0-9aa4-b99abd6258c4
-goodarray(17)
+# ╔═╡ 66304d47-5b7e-4ae0-98cb-06d6b748ad0e
+md"""
+---
+---
+"""
+
+# ╔═╡ a9adb18f-eaca-4458-8875-7b06d57e03be
+begin
+	function SumLinLst(l1::Vector{Int64}, l2::Vector{Int64})
+		
+		n1, n2 = length(l1), length(l2);
+		n = max(n1,n2);
+		a = zeros(Int,n); a[1:n1] = l1;
+		b = zeros(Int,n); b[1:n2] = l2;
+		
+		s = Vector{Int}(undef, n)
+		carry = 0
+		
+		for i = 1:n
+			sum = a[i] + b[i] + carry
+			s[i] = sum%10
+			carry = sum÷10
+		end
+		
+		if carry != 0
+			push!(s, carry)
+		end
+		
+		return s
+	end
+	SumLinLst([9,9,9,9,9,9,9], [9,9,9,9])
+end
+
+# ╔═╡ b4197d3d-54b6-4cad-911b-eba17b8ffa0f
+md"""
+---
+---
+"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -319,8 +319,9 @@ manifest_format = "2.0"
 # ╟─9d62d103-10bb-43a6-9188-133a20636470
 # ╠═d9833230-4d7f-483a-9693-e13d0bc372de
 # ╟─9076d9bd-b5a2-4ef4-8a72-4ee914a46bf9
-# ╟─aaad674f-233a-4802-b57a-da6132b9fb44
 # ╠═441a45bf-b2ab-421f-9e40-ff6aeac75c99
-# ╠═2adeb08d-0a36-4af0-9aa4-b99abd6258c4
+# ╟─66304d47-5b7e-4ae0-98cb-06d6b748ad0e
+# ╠═a9adb18f-eaca-4458-8875-7b06d57e03be
+# ╟─b4197d3d-54b6-4cad-911b-eba17b8ffa0f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
